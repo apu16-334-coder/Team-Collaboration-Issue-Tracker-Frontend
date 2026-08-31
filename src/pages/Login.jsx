@@ -1,9 +1,11 @@
 import axiosClient from "../api/axiosClient";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 function Login() {
     const navigate = useNavigate()
+    const { login } = useContext(AuthContext);
 
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +16,7 @@ function Login() {
         setFormData(prev => ({ ...prev, [name]: value }));
     }
 
-    async function handleSubmit (e) {
+    async function handleSubmit(e) {
         e.preventDefault();
         setError(null);
         setIsLoading(true);
@@ -22,13 +24,10 @@ function Login() {
         try {
             const response = await axiosClient.post('/auth/login', formData)
 
-            console.log(response);
-
-            // Assuming the token is at response.data.token — adjust once confirmed
-            localStorage.setItem('token', response.data.token);
+            login(response.data.token, response.data.data) // delegate to context
 
             navigate('/');
-            
+
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed')
         } finally {
