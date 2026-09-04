@@ -15,12 +15,12 @@ axiosClient.interceptors.request.use(
     (error) => Promise.reject(error)
 )
 
-axios.interceptors.response.use(
+axiosClient.interceptors.response.use(
     (response) => response,
     (error) => {
         if(error.response?.status === 401) {
             localStorage.removeItem('token');
-            window.location.href = '/';
+            window.location.href = '/login';
         }
 
         return Promise.reject(error);
