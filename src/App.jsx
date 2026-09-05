@@ -5,6 +5,7 @@ import Home from "./pages/Home"
 import Dashboard from "./pages/Dashboard"
 import Project from "./pages/Project"
 import ProtectedRoute from "./components/ProtectedRoute"
+import RoleProtectedRoute from "./components/RoleProtectedRoute"
 
 function App() {
     return (
@@ -17,10 +18,16 @@ function App() {
             <Route element={<ProtectedRoute />}>
                 <Route element={<Layout />}>
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/projects" element={<Project />} />
+
+                    {/* Role Protected */}
+                    <Route element= {<RoleProtectedRoute allowedRoles={['admin']} />}>
+                        <Route path="/projects" element={<Project />} />
+                    </Route>
+
                     <Route path="/projects/:id" element={<Project />} />
                 </Route>
             </Route>
+
         </Routes>
     )
 }

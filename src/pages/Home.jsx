@@ -4,8 +4,7 @@ function Home() {
     return (
         <div>
             <h1>Issue Tracker</h1>
-            <Link to="/login">Sign In</Link>
-            <Link to="/signup">Get Started</Link>
+            <Link to="/login">Log In</Link>
         </div>
     )
 }

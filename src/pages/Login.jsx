@@ -1,5 +1,5 @@
 import axiosClient from "../api/axiosClient";
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
@@ -27,7 +27,7 @@ function Login() {
 
             login(response.data.token, response.data.data) // delegate to context
 
-            navigate(location.state?.from?.pathname || '/');
+            navigate(location.state?.from?.pathname || '/dashboard');
 
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed')
