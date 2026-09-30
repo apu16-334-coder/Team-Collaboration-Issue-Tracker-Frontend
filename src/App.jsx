@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import ProtectedRoute from "./components/ProtectedRoute";
 import Projects from "./pages/Projects";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
+import NotFound from "./pages/NotFound ";
 
 function App() {
 
@@ -23,6 +24,8 @@ function App() {
                     </Route>
                    
                 </Route>
+
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </>
     )

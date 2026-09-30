@@ -8,7 +8,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401 && !error.config?.skipAuthRedirect) {
+        if (error.response?.status === 401 && !error.config?.skipAuthRedirect && window.location.pathname !== '/login') {
             window.location.href = '/login';
         }
 

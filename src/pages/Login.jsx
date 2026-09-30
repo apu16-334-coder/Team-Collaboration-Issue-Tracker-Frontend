@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import axiosClient from "../api/axiosClient";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -33,8 +33,8 @@ function Login() {
 
             navigate(location.state?.from?.pathname || '/dashboard')
 
-        } catch (error) {
-            setError(error.response?.data?.message || 'Login Failed')
+        } catch (err) {
+            setError(err.response?.data?.message || 'Login Failed')
         } finally {
             setIsLoading(false);
         }

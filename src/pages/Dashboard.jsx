@@ -8,7 +8,7 @@ function Dashboard() {
     return (
         <>
             <h2>Dashboard Page</h2>
-            <h4>Welcome To DahsBoard...! {user.name.toLocaleUpperCase()}</h4>
+            <h4>Welcome To Dashboard...! {user.name.toLocaleUpperCase()}</h4>
 
             <Link to='/'>Home</Link> <br /> <br />
             <Link to='/projects'>Projects</Link> <br /> <br />
