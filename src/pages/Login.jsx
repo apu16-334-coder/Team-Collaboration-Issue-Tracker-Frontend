@@ -1,39 +1,44 @@
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 import axiosClient from "../api/axiosClient";
-import { useState, useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 function Login() {
-    const location = useLocation();
-    const navigate = useNavigate()
     const { login } = useContext(AuthContext);
+
+    const location = useLocation()
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    function handleChange(e) {
-        const { value, name } = e.target;
+    function handleChange(event) {
+        const { name, value } = event.target
         setFormData(prev => ({ ...prev, [name]: value }));
     }
 
-    async function handleSubmit(e) {
-        e.preventDefault();
+    async function handleSubmit(event) {
+        event.preventDefault();
         setError(null);
         setIsLoading(true);
 
         try {
-            const response = await axiosClient.post('/auth/login', formData)
+            const response = await axiosClient.post('/auth/login', formData, {
+                skipAuthRedirect: true, // expected to 401 when logged out — don't force-redirect
+            });
 
-            login(response.data.token, response.data.data) // delegate to context
+            login(response.data.data) // delegate to context
 
-            navigate(location.state?.from?.pathname || '/dashboard');
+            navigate(location.state?.from?.pathname || '/dashboard')
 
-        } catch (err) {
-            setError(err.response?.data?.message || 'Login failed')
+        } catch (error) {
+            setError(error.response?.data?.message || 'Login Failed')
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
+
     }
 
     return (

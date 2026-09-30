@@ -1,16 +1,14 @@
-import { AuthContext } from '../context/AuthContext';
-import { useContext } from 'react';
+import { useContext } from "react"
+import { Navigate, Outlet, useLocation } from "react-router-dom"
+import { AuthContext } from "../contexts/AuthContext"
 
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+function ProtectedRoute(params) {
+    const { user, isLoading } = useContext(AuthContext)
+    const location = useLocation()
 
-function ProtectedRoute() {
-    const location = useLocation();
+    if(isLoading) return <p>Loading....</p>
 
-    const {user, isLoading} = useContext(AuthContext);
-
-    if(isLoading) return <p>Loading...</p>
-
-    if(!user) return <Navigate to="/login" state={{ from: location }}  replace />
+    if(!user) return <Navigate to='/login' state={{ from: location}} />
 
     return <Outlet />
 }

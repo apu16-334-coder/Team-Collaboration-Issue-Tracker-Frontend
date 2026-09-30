@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axiosClient from "../api/axiosClient";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 
-
-function Project() {
+function Projects() {
+    const { logout } = useContext(AuthContext);
     const [projects, setProjects] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -44,9 +45,12 @@ function Project() {
                         </li>
                     ))}
                 </ul>
-            </div>
+            </div> <br />
+
+            <Link to='/dashboard'>Dashboard</Link> <br /> <br />
+            <button onClick={logout}>Logout</button>
         </>
     )
 }
 
-export default Project;
+export default Projects;
