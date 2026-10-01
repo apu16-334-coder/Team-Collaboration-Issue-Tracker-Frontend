@@ -4,7 +4,6 @@ import axiosClient from "../api/axiosClient";
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -15,7 +14,7 @@ export function AuthProvider({ children }) {
                     skipAuthRedirect: true, // expected to 401 when logged out — don't force-redirect
                 });
                 setUser(response.data.data);
-            } catch (error) {
+            } catch (err) {
                 setUser(null);
             } finally {
                 setIsLoading(false);
@@ -40,12 +39,8 @@ export function AuthProvider({ children }) {
     }
 
     return (
-
         <AuthContext.Provider value={{ user, isLoading, login, logout }}>
             {children}
         </AuthContext.Provider>
-
     )
-
 }
-
