@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import axiosClient from "../api/axiosClient";
+import axiosClient from "../../api/axiosClient";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
-import useApi from "../hooks/useApi";
+import { AuthContext } from "../auth/AuthContext";
+import useApi from "../../shared/hooks/useApi";
 
 function Projects() {
     const { logout } = useContext(AuthContext);

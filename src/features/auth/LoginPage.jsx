@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AuthContext } from "../auth/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import useMutation from "../../shared/hooks/useMutation";
 

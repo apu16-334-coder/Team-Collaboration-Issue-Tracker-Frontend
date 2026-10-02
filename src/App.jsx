@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 import Home from './pages/Home'
-import Dashboard from './pages/Dashboard'
-import Login from './pages/Login'
-import ProtectedRoute from "./components/ProtectedRoute";
-import Projects from "./pages/Projects";
-import RoleProtectedRoute from "./components/RoleProtectedRoute";
-import NotFound from "./pages/NotFound ";
+import DashboardPage from './features/dashboard/DashboardPage'
+import LoginPage from './features/auth/LoginPage'
+import ProtectedRoute from "./routes/ProtectedRoute";
+import AllProjectsPage from "./features/projects/AllProjectsPage";
+import RoleProtectedRoute from "./routes/RoleProtectedRoute";
+import NotFound from "./pages/NotFound";
 
 function App() {
 
@@ -13,14 +13,14 @@ function App() {
         <>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<LoginPage />} />
 
                 <Route element={<ProtectedRoute />}>
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/dashboard" element={<DashboardPage />} />
 
                     {/* Role Protected */}
                     <Route element= {<RoleProtectedRoute allowedRoles={['admin']} />}>
-                        <Route path="/projects" element={<Projects />} />
+                        <Route path="/projects" element={<AllProjectsPage />} />
                     </Route>
                    
                 </Route>

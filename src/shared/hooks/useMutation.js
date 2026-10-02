@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import axiosClient from "../../api/axiosClient";
-import getErrorMessage from "./getErrorMessage";
+import getErrorMessage from "../utils/getErrorMessage";
 
 function useMutation() {
     const [isLoading, setIsLoading] = useState(false);
