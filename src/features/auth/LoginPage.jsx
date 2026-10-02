@@ -1,18 +1,18 @@
 import { useState, useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
-import axiosClient from "../api/axiosClient";
+import { AuthContext } from "../../contexts/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import useMutation from "../../shared/hooks/useMutation";
 
 
 function Login() {
+    const [formData, setFormData] = useState({ email: '', password: '' });
     const { login } = useContext(AuthContext);
+    const { mutate, isLoading, error } = useMutation();
 
     const location = useLocation()
     const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({ email: '', password: '' });
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+    
 
     function handleChange(event) {
         const { name, value } = event.target
@@ -21,24 +21,11 @@ function Login() {
 
     async function handleSubmit(event) {
         event.preventDefault();
-        setError(null);
-        setIsLoading(true);
+            const result = await mutate('post', 'auth/login', formData, { skipAuthRedirect: true });
+            if(!result.ok) return; 
 
-        try {
-            const response = await axiosClient.post('/auth/login', formData, {
-                skipAuthRedirect: true, // expected to 401 — don't force-redirect
-            });
-
-            login(response.data.data) // delegate to context
-
+            login(result?.data?.data); // delegate to context
             navigate(location.state?.from?.pathname || '/dashboard')
-
-        } catch (err) {
-            setError(err.response?.data?.message || 'Login Failed')
-        } finally {
-            setIsLoading(false);
-        }
-
     }
 
     return (

@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import axiosClient from "../../api/axiosClient";
 import getErrorMessage from "./getErrorMessage";
 
-function useMutation(params) {
+function useMutation() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -12,7 +12,7 @@ function useMutation(params) {
             setError(null);
 
             const response = await axiosClient.request();
-            return { ok: true, data: response.data};
+            return { ok: true, data: response?.data};
         } catch (err) {
             const message = getErrorMessage(err);
             setError(message);
