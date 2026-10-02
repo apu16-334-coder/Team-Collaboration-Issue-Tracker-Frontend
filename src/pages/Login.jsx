@@ -26,7 +26,7 @@ function Login() {
 
         try {
             const response = await axiosClient.post('/auth/login', formData, {
-                skipAuthRedirect: true, // expected to 401 when logged out — don't force-redirect
+                skipAuthRedirect: true, // expected to 401 — don't force-redirect
             });
 
             login(response.data.data) // delegate to context

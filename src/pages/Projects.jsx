@@ -2,12 +2,16 @@ import { useContext, useEffect, useState } from "react";
 import axiosClient from "../api/axiosClient";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import useApi from "../hooks/useApi";
 
 function Projects() {
     const { logout } = useContext(AuthContext);
-    const [projects, setProjects] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { response, isLoading, error, refetch} = useApi(url, false, { 
+        params: {
+
+        },
+        skipAuthRedirect: false 
+    })
 
     useEffect(() => {
         async function fetchProjects() {
