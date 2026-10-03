@@ -1,4 +1,3 @@
-// src/layout/Topbar.jsx
 import { useContext } from "react";
 import { AuthContext } from "../features/auth/AuthContext";
 
