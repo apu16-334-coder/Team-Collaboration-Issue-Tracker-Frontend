@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../auth/AuthContext";
 import useApi from "../../shared/hooks/useApi";
 
-function Projects() {
+function AllProjectsPage() {
     const { logout } = useContext(AuthContext);
 
     const { response, isLoading, error } = useApi('/projects');
@@ -32,4 +32,4 @@ function Projects() {
     )
 }
 
-export default Projects;
+export default AllProjectsPage;

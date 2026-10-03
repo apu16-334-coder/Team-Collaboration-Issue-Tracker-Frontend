@@ -4,15 +4,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useMutation from "../../shared/hooks/useMutation";
 
 
-function Login() {
+function LoginPage() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const { login } = useContext(AuthContext);
     const { mutate, isLoading, error } = useMutation();
 
     const location = useLocation()
     const navigate = useNavigate();
-
-    
 
     function handleChange(event) {
         const { name, value } = event.target
@@ -25,7 +23,7 @@ function Login() {
             if(!result.ok) return; 
 
             login(result?.data?.data); // delegate to context
-            navigate(location.state?.from?.pathname || '/dashboard')
+            navigate(location.state?.from?.pathname || '/dashboard', { replace: true });
     }
 
     return (
@@ -54,4 +52,4 @@ function Login() {
     )
 }
 
-export default Login;
+export default LoginPage;
