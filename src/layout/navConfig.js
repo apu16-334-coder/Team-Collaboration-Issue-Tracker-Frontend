@@ -1,7 +1,7 @@
 export const navConfig = [
-    { lable: 'Dashboard', to: '/dashboard', roles: ['admin, teamLead', 'member'] },
-    { lable: 'Users', to: '/users', roles: 'admin' },
-    { lable: 'Teams', to: '/teams', roles: ['admin, teamLead', 'member'] },
-    { lable: 'Projects', to: '/projects', roles: ['admin']},
-    { lable: 'Profile', to: '/profile', roles: ['admin, teamLead', 'member'] },
+    { label: 'Dashboard', to: '/dashboard', roles: ['admin', 'teamLead', 'member'] },
+    { label: 'Users', to: '/users', roles: 'admin' },
+    { label: 'Teams', to: '/teams', roles: ['admin', 'teamLead', 'member'] },
+    { label: 'Projects', to: '/projects', roles: ['admin']},
+    { label: 'Profile', to: '/profile', roles: ['admin', 'teamLead', 'member'] },
 ];

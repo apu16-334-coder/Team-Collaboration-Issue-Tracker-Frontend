@@ -6,6 +6,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import AllProjectsPage from "./features/projects/AllProjectsPage";
 import RoleProtectedRoute from "./routes/RoleProtectedRoute";
 import NotFound from "./pages/NotFound";
+import AppShell from "./layout/AppShell";
 
 function App() {
 
@@ -16,13 +17,15 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
 
                 <Route element={<ProtectedRoute />}>
-                    <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route element={<AppShell />}>
+                        <Route path="/dashboard" element={<DashboardPage />} />
 
-                    {/* Role Protected */}
-                    <Route element= {<RoleProtectedRoute allowedRoles={['admin']} />}>
-                        <Route path="/projects" element={<AllProjectsPage />} />
+                        {/* Role Protected */}
+                        <Route element={<RoleProtectedRoute allowedRoles={['admin']} />}>
+                            <Route path="/projects" element={<AllProjectsPage />} />
+                        </Route>
+
                     </Route>
-                   
                 </Route>
 
                 <Route path="*" element={<NotFound />} />
