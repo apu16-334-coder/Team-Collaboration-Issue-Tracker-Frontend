@@ -1,41 +1,16 @@
-import { useContext, useEffect, useState } from "react";
-import axiosClient from "../../api/axiosClient";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../auth/AuthContext";
 import useApi from "../../shared/hooks/useApi";
 
 function Projects() {
     const { logout } = useContext(AuthContext);
-    const { response, isLoading, error, refetch} = useApi(url, false, { 
-        params: {
 
-        },
-        skipAuthRedirect: false 
-    })
+    const { response, isLoading, error } = useApi('/projects');
+    const projects = response?.data ?? [];
 
-    useEffect(() => {
-        async function fetchProjects() {
-            try {
-                setIsLoading(true);
-                setError(null);
-
-                const response = await axiosClient.get('/projects');
-
-                setProjects(response.data.data)
-
-
-            } catch (err) {
-                setError(err.response?.data?.message || 'Fetching projects failed')
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        fetchProjects();
-    }, [])
-
-    if (isLoading) return <p>Loading projects...</p>
-    if (error) return <p style={{ color: 'red' }}>{error}</p>
+    if (isLoading) return <p>Loading projects...</p>;
+    if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
     return (
         <>

@@ -21,7 +21,7 @@ function Login() {
 
     async function handleSubmit(event) {
         event.preventDefault();
-            const result = await mutate('post', 'auth/login', formData, { skipAuthRedirect: true });
+            const result = await mutate('post', '/auth/login', formData, { skipAuthRedirect: true });
             if(!result.ok) return; 
 
             login(result?.data?.data); // delegate to context

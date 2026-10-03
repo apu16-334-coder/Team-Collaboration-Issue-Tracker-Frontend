@@ -23,6 +23,8 @@ function useApi(url, { skip = false, ...config } = {}) {
                 setError(null);
                 const res = await axiosClient.get(url, { ...config, signal: controller.signal });
                 setResponse(res.data);
+                console.log(res.data);
+
             } catch (err) {
                 if (axios.isCancel(err)) return; // we cancelled it ourselves, not a real error
                 setError(getErrorMessage(err));
