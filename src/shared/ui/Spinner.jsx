@@ -1,6 +1,6 @@
 function Spinner({ label = 'Loading...' }) {
     return (
-        <div>
+        <div style={{ padding: "1rem" }}>
             {label}
         </div>
     )

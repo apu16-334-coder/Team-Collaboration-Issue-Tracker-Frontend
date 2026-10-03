@@ -1,22 +1,21 @@
-import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../auth/AuthContext";
 import useApi from "../../shared/hooks/useApi";
+import Spinner from "../../shared/ui/Spinner";
+import ErrorState from "../../shared/ui/ErrorState";
+import EmptyState from "../../shared/ui/EmptyState";
 
 function AllProjectsPage() {
-    const { logout } = useContext(AuthContext);
-
-    const { response, isLoading, error } = useApi('/projects');
+    const { response, isLoading, error, refetch } = useApi('/projects');
     const projects = response?.data ?? [];
 
-    if (isLoading) return <p>Loading projects...</p>;
-    if (error) return <p style={{ color: 'red' }}>{error}</p>;
+    if (isLoading) return <Spinner label='Loading Projects...' />;
+    if (error) return <ErrorState message={error} onRetry={refetch} />;
+    if (projects.length === 0) return <EmptyState title="No projects yet" message="Projects will appear here once teams create them." />
 
     return (
         <>
             <div>
                 <h1>Projects</h1>
-                {projects.length === 0 && <p>No projects yet.</p>}
                 <ul>
                     {projects.map(project => (
                         <li key={project.id}>
@@ -25,9 +24,6 @@ function AllProjectsPage() {
                     ))}
                 </ul>
             </div> <br />
-
-            <Link to='/dashboard'>Dashboard</Link> <br /> <br />
-            <button onClick={logout}>Logout</button>
         </>
     )
 }
