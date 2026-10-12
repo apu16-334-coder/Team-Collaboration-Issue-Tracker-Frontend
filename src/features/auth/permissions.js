@@ -11,7 +11,7 @@
 // ---------------------------------------------------------------------------
 
 // A reference field can arrive populated or as a plain id string.
-const idOf = (value) => (value && typeof value === 'object' ? value.id : value) ?? null;
+const idOf = (value) => (value && typeof value === 'object' ? value?.id : value) ?? null;
 
 // Role checks. `?.` makes a missing user return false instead of crashing.
 export const isAdmin = (user) => user?.role === 'admin';
@@ -23,6 +23,9 @@ export const isMember = (user) => user?.role === 'member';
 // used for leads.
 const isIssueCreator = (user, issue) => isMember(user) && idOf(issue?.createdBy) === user?.id;
 const isIssueAssignee = (user, issue) => isMember(user) && idOf(issue?.assignedTo) === user?.id;
+
+// Relationship checks for comment author
+const isCommentAuthor = (user, comment) => idOf(comment?.author) === user?.id;
 
 // ---------------------------------------------------------------------------
 // Rules
@@ -56,8 +59,8 @@ export const can = {
     changeIssueStatus: (user, issue) => isLead(user) || isIssueAssignee(user, issue),
 
     // Author only
-    editComment: (user, comment) => idOf(comment.author) === user?.id,
-    deleteComment: (user, comment) => idOf(comment.author) === user?.id,
+    editComment: (user, comment) => isCommentAuthor(user, comment),
+    deleteComment: (user, comment) => isCommentAuthor(user, comment),
 };
 
 // ---------------------------------------------------------------------------
