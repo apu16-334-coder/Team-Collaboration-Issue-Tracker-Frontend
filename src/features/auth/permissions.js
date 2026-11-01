@@ -83,7 +83,7 @@ export function allowedProjectStatuses(user) {
 
 // Fields the issue edit form may show. Role-based only (no issue argument),
 // so it knows nothing about the user's relationship to the issue: only call it
-// when can.editIssue(user, issue) is true.
+// when can.editIssue(user) is true.
 // `status` is not here: its control is gated by can.changeIssueStatus and
 // filled from allowedIssueStatuses. Only a lead may change `assignedTo`.
 export function editableIssueFields(user) {

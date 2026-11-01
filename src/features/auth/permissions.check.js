@@ -42,7 +42,21 @@ const rows = [
     ['member can not manage teams', can.manageTeams(m1), false],
 
     // ---- Projects ----
-
+    ['admin can not create project', can.createProject(admin), false],
+    ['lead create project', can.createProject(lead), true],
+    ['member can not create project', can.createProject(m1), false],
+    ['admin can edit project', can.editProject(admin), true],
+    ['lead can edit project', can.editProject(lead), true],
+    ['member can not edit project', can.editProject(m1), false],
+    ['admin can delete project', can.deleteProject(admin), true],
+    ['lead can not delete project', can.deleteProject(lead), false],
+    ['member can not delete project', can.deleteProject(m1), false],
+    ['admin project fields', editableProjectFields(admin), ['title', 'description', 'status', 'team', 'dueDate']],
+    ['lead project fields', editableProjectFields(lead), ['title', 'description', 'status']],
+    ['member project fields', editableProjectFields(m1), []],
+    ['admin allowed statuses', allowedProjectStatuses(admin), ['planning', 'active', 'on_hold', 'completed']],
+    ['lead allowed statuses', allowedProjectStatuses(lead), ['planning', 'active', 'on_hold', 'completed']],
+    ['member allowed statuses', allowedProjectStatuses(m1), []],
 
     // ---- Issues: create / delete ----
 
