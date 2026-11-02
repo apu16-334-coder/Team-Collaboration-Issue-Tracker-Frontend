@@ -97,9 +97,38 @@ const rows = [
     ['member editable issue fields', allowedIssueStatuses(m1), ['open', 'in_progress', 'done']],
 
     // ---- Comments ----
-
-
+    ['author can edit comment', can.editComment(m1, m1Comment), true],
+    ['author can delete comment', can.deleteComment(m1, m1Comment), true],
+    ['non-author can not edit comment', can.editComment(m2, m1Comment), false],
+    ['non-author can not delete comment', can.deleteComment(m2, m1Comment), false],
+    
     // ---- Safety: missing user / missing record never crashes ----
+    // ---- Users & teams (admin only) ----
+    ['null user: manage users', can.manageUsers(null), false],
+    ['null user: manage teams', can.manageTeams(null), false],
+
+    // ---- Projects ----
+    ['null user: create project', can.createProject(null), false],
+    ['null user: edit project', can.editProject(null), false],
+    ['null user: delete project', can.deleteProject(null), false],
+
+    // ---- Issues ----
+    ['null user: create issue', can.createIssue(null), false],
+    ['null user: assign issue to others', can.assignIssueToOthers(null), false],
+    ['null user: delete issue', can.deleteIssue(null), false],
+    ['null user: edit issue', can.editIssue(null, null), false],
+    ['null user: change issue status', can.changeIssueStatus(null, null), false],
+
+    // ---- Comments ----
+    ['null user: create comment', can.createComment(null), false],
+    ['null user: edit comment', can.editComment(null, null), false],
+    ['null user: delete comment', can.deleteComment(null, null), false],
+
+    // ---- Lists ----
+    ['null user: editable project fields', editableProjectFields(null), []],
+    ['null user: allowed project statuses', allowedProjectStatuses(null), []],
+    ['null user: editable Issue Fields', editableIssueFields(null), []],
+    ['null user: allowed Issue Statuses', allowedIssueStatuses(null), []],
 
 ];
 
