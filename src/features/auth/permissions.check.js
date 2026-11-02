@@ -21,13 +21,13 @@ const m2 = { id: 'm2', role: 'member' };
 
 // --- Issues (the three relationships that matter for members) -------------
 // m1 created it and is assigned to it
-const ownIssue = { createdAt: { id: 'm1' }, assignedTo: { id: 'm1' } };
+const ownIssue = { createdBy: { id: 'm1' }, assignedTo: { id: 'm1' } };
 // the lead created it and assigned it to m1
-const assignedByLead = { createdAt: { id: 'l1' }, assignedTo: { id: 'm1' } };
+const assignedByLead = { createdBy: { id: 'l1' }, assignedTo: { id: 'm1' } };
 // m1 created it but did not assign it (handed to the lead)
-const unassigned = { createdAt: { id: 'm1' }, assignedTo: null };
+const unassigned = { createdBy: { id: 'm1' }, assignedTo: null };
 // same as ownIssue, but ids arrive as plain strings, not populated objects
-const ownIssueIds = { createdAt: 'm1', assignedTo: 'm1' };
+const ownIssueIds = { createdBy: 'm1', assignedTo: 'm1' };
 
 // --- Comments -------------------------------------------------------------
 const m1Comment = { author: { id: 'm1' } };
@@ -59,16 +59,42 @@ const rows = [
     ['member allowed statuses', allowedProjectStatuses(m1), []],
 
     // ---- Issues: create / delete ----
-
+    ['admin can not create issue', can.createIssue(admin), false],
+    ['lead create issue', can.createIssue(lead), true],
+    ['member create issue', can.createIssue(m1), true],
+    ['admin can not assign issue to others', can.assignIssueToOthers(admin), false],
+    ['lead can assign issue to others', can.assignIssueToOthers(lead), true],
+    ['member can not assign issue to others', can.assignIssueToOthers(m1), false],
+    ['admin can not delete issue', can.deleteIssue(admin), false],
+    ['lead can delete issue', can.deleteIssue(lead), true],
+    ['member can not delete issue', can.deleteIssue(m1), false],
 
     // ---- Issues: edit (relationship rule) ----
-
+    ['admin can not edit any issue', can.editIssue(admin, ownIssue), false],
+    ['lead can edit any issue 1', can.editIssue(lead, ownIssue), true],
+    ['lead can edit any issue 2', can.editIssue(lead, assignedByLead), true],
+    ['lead can edit any issue 3', can.editIssue(lead, unassigned), true],
+    ['lead can edit any issue 4', can.editIssue(lead, ownIssueIds), true],
+    ['member can edit issue if he or she is the creator and assigne both 1', can.editIssue(m1, ownIssue), true],
+    ['member can edit issue if he or she is the creator and assigne both 2', can.editIssue(m1, ownIssueIds), true],
+    ['member can not edit issue if he or she is not the creator and assignee', can.editIssue(m1, assignedByLead), false],
+    ['member can not edit issue if he or she is not the creator and assignee', can.editIssue(m1, unassigned), false],
+    ['member can not edit issue if he or she is not the creator and assignee', can.editIssue(m1, unassigned), false],
 
     // ---- Issues: change status (relationship rule) ----
-
+    ['admin can not change issue status', can.changeIssueStatus(admin, ownIssue), false],
+    ['lead can change issue status', can.changeIssueStatus(lead, ownIssue), true],
+    ['member can change issue status if he is the assignee', can.changeIssueStatus(m1, ownIssue), true],
+    ['member can change issue status if he is the assignee', can.changeIssueStatus(m1, assignedByLead), true],
+    ['member can not change issue status if he is not the assignee', can.changeIssueStatus(m2, assignedByLead), false],
 
     // ---- Issues: lists ----
-
+    ['admin editable issue fields', editableIssueFields(admin), []],
+    ['lead editable issue fields', editableIssueFields(lead), ['title', 'description', 'priority', 'type', 'project', 'assignedTo', 'dueDate']],
+    ['member editable issue fields', editableIssueFields(m1), ['title', 'description', 'priority', 'type', 'project']],
+    ['admin editable issue fields', allowedIssueStatuses(admin), []],
+    ['lead editable issue fields', allowedIssueStatuses(lead), ['open', 'in_progress', 'done', 'in_review', 'closed']],
+    ['member editable issue fields', allowedIssueStatuses(m1), ['open', 'in_progress', 'done']],
 
     // ---- Comments ----
 
