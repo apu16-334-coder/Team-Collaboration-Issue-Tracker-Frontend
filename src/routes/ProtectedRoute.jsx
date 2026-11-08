@@ -6,9 +6,9 @@ function ProtectedRoute(params) {
     const { user, isLoading } = useContext(AuthContext)
     const location = useLocation()
 
-    if(isLoading) return <p>Loading....</p>
+    if (isLoading) return <p>Loading....</p>
 
-    if(!user) return <Navigate to='/login' state={{ from: location}} replace />
+    if (!user) return <Navigate to='/login' state={{ from: location }} replace />
 
     return <Outlet />
 }

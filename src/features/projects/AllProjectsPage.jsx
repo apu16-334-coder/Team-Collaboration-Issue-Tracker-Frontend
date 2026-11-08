@@ -3,9 +3,15 @@ import useApi from "../../shared/hooks/useApi";
 import Spinner from "../../shared/ui/Spinner";
 import ErrorState from "../../shared/ui/ErrorState";
 import EmptyState from "../../shared/ui/EmptyState";
+import useListQuery from '../../shared/hooks/useListQuery'
+
+const filterKeys = ['search', 'status']
 
 function AllProjectsPage() {
-    const { response, isLoading, error, refetch } = useApi('/projects');
+    const { params } = useListQuery({ filterKeys })
+
+    const { response, isLoading, error, refetch } = useApi('/projects', { params });
+
     const projects = response?.data ?? [];
 
     if (isLoading) return <Spinner label='Loading Projects...' />;

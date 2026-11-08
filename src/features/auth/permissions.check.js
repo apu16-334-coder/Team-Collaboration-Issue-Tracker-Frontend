@@ -101,7 +101,7 @@ const rows = [
     ['author can delete comment', can.deleteComment(m1, m1Comment), true],
     ['non-author can not edit comment', can.editComment(m2, m1Comment), false],
     ['non-author can not delete comment', can.deleteComment(m2, m1Comment), false],
-    
+
     // ---- Safety: missing user / missing record never crashes ----
     // ---- Users & teams (admin only) ----
     ['null user: manage users', can.manageUsers(null), false],

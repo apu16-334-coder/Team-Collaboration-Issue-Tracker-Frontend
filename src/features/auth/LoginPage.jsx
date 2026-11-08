@@ -19,11 +19,11 @@ function LoginPage() {
 
     async function handleSubmit(event) {
         event.preventDefault();
-            const result = await mutate('post', '/auth/login', formData, { skipAuthRedirect: true });
-            if(!result.ok) return; 
+        const result = await mutate('post', '/auth/login', formData, { skipAuthRedirect: true });
+        if (!result.ok) return;
 
-            login(result?.data?.data); // delegate to context
-            navigate(location.state?.from?.pathname || '/dashboard', { replace: true });
+        login(result?.data?.data); // delegate to context
+        navigate(location.state?.from?.pathname || '/dashboard', { replace: true });
     }
 
     return (

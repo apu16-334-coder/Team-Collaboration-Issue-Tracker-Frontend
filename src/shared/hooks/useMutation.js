@@ -6,13 +6,13 @@ function useMutation() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const mutate = useCallback(async(method, url, data, config = {}) => {
+    const mutate = useCallback(async (method, url, data, config = {}) => {
         try {
             setIsLoading(true);
             setError(null);
 
-            const response = await axiosClient.request({method, url, data, ...config});
-            return { ok: true, data: response?.data};
+            const response = await axiosClient.request({ method, url, data, ...config });
+            return { ok: true, data: response?.data };
         } catch (err) {
             const message = getErrorMessage(err);
             setError(message);

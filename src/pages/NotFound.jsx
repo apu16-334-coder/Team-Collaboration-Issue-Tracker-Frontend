@@ -1,5 +1,5 @@
 function NotFound() {
-    return(
+    return (
         <h2>404 Not Found</h2>
     )
 }
