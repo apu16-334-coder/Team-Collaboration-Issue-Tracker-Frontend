@@ -4,6 +4,7 @@ import Spinner from "../../shared/ui/Spinner";
 import ErrorState from "../../shared/ui/ErrorState";
 import EmptyState from "../../shared/ui/EmptyState";
 import useListQuery from '../../shared/hooks/useListQuery'
+import ProjectList from './ProjectList'
 
 const filterKeys = ['search', 'status']
 
@@ -22,13 +23,7 @@ function AllProjectsPage() {
         <>
             <div>
                 <h1>Projects</h1>
-                <ul>
-                    {projects.map(project => (
-                        <li key={project.id}>
-                            <Link to={`/projects/${project.id}`}>{project.title}</Link>
-                        </li>
-                    ))}
-                </ul>
+                <ProjectList projects={projects} />
             </div> <br />
         </>
     )
