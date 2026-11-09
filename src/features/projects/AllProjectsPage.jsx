@@ -7,6 +7,7 @@ import useListQuery from '../../shared/hooks/useListQuery'
 import ProjectList from './ProjectList'
 import ProjectFilters from './ProjectFilters'
 import Pagination from "../../shared/ui/Pagination";
+import { PROJECT_SORT_OPTIONS } from './projectOptions'
 
 const filterKeys = ['search', 'status']
 
@@ -40,6 +41,16 @@ function AllProjectsPage() {
             <div>
                 <h1>Projects</h1>
                 <ProjectFilters applied={params} onApply={applyFilters} onReset={reset} />
+                <label>
+                    Sort by{" "}
+                    <select value={params.sort} onChange={(event) => setSort(event.target.value)}>
+                        {PROJECT_SORT_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                </label>
 
                 {result}
             </div> <br />
