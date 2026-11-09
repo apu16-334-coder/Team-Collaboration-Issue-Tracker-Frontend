@@ -5,11 +5,12 @@ import ErrorState from "../../shared/ui/ErrorState";
 import EmptyState from "../../shared/ui/EmptyState";
 import useListQuery from '../../shared/hooks/useListQuery'
 import ProjectList from './ProjectList'
+import ProjectFilters from './ProjectFilters'
 
 const filterKeys = ['search', 'status']
 
 function AllProjectsPage() {
-    const { params } = useListQuery({ filterKeys })
+    const { params, hasActiveQuery, applyFilters, setSort, setPage, reset } = useListQuery({ filterKeys })
 
     const { response, isLoading, error, refetch } = useApi('/projects', { params });
 
@@ -23,6 +24,8 @@ function AllProjectsPage() {
         <>
             <div>
                 <h1>Projects</h1>
+                <ProjectFilters applied={params} onApply={applyFilters} onReset={reset} />
+
                 <ProjectList projects={projects} />
             </div> <br />
         </>

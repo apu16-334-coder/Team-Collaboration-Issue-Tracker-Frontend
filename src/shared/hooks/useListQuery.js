@@ -23,7 +23,29 @@ function useListQuery({ filterKeys = [], defaults = {} } = {}) {
 
     params.page = Math.max(1, parseInt(params.page, 10) || 1);
 
-    return { params }
+    function update(changes) {
+        const next = { ...params, ... changes }
+
+        for (const [key, value] of Object.entries(next)) {
+            const isEmpty = value === "" || value == null;
+            const isDefault = String(value) === String(base[key]);
+
+            if (isEmpty || isDefault) delete next[key];
+            else next[key] = value;
+        }
+
+        setSearchParams(next);
+    }
+
+    return {
+        params,
+        hasActiveQuery: searchParams.toString() !== "",
+        applyFilters: (filters) => update({ ...filters, page: 1 }),
+        setSort: (sort) => update({ sort, page: 1 }),
+        setPage: (page) => update({ page }),
+        reset: () => setSearchParams({}),
+
+    }
 }
 
 export default useListQuery;
