@@ -44,7 +44,6 @@ function useListQuery({ filterKeys = [], defaults = {} } = {}) {
         setSort: (sort) => update({ sort, page: 1 }),
         setPage: (page) => update({ page }),
         reset: () => setSearchParams({}),
-
     }
 }
 
