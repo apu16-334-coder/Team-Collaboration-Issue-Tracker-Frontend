@@ -7,6 +7,9 @@ import TeamsList from './TeamList'
 import ListResults from '../../shared/ui/ListResults'
 import EmptyState from "../../shared/ui/EmptyState";
 import Pagination from "../../shared/ui/Pagination";
+import TeamFilters from "./TeamFilters";
+import { TEAM_SORT_OPTIONS } from './teamOptions'
+import SortSelect from '../../shared/ui/SortSelect'
 
 const ADMIN_FILTER_KEYS = ["search", "isActive"];
 const MY_FILTER_KEYS = ["search"];
@@ -21,7 +24,9 @@ function TeamsPage() {
     const { user } = useContext(AuthContext);
     const admin = isAdmin(user);
 
-    const { params, hasActiveQuery, applyFilters, setSort, setPage, reset } = useListQuery(admin ? ADMIN_FILTER_KEYS : MY_FILTER_KEYS);
+    const { params, hasActiveQuery, applyFilters, setSort, setPage, reset } = useListQuery({ filterKeys: admin ? ADMIN_FILTER_KEYS : MY_FILTER_KEYS });
+
+    // console.log(params);
 
     const { response, isLoading, error, refetch } = useApi(admin ? '/teams' : '/teams/my', { params });
 
@@ -30,6 +35,18 @@ function TeamsPage() {
 
     return (
         <>
+            <h1>{admin ? "Teams" : "My teams"}</h1>
+
+            <TeamFilters
+                key={`${params.search ?? ""}|${params.isActive ?? ""}`}
+                applied={params}
+                onApply={applyFilters}
+                onReset={reset}
+                showActiveFilter={admin}
+            />
+
+            <SortSelect params={params} options={TEAM_SORT_OPTIONS} setSort={setSort} />
+
             <ListResults
                 isLoading={isLoading}
                 error={error}

@@ -1,8 +1,6 @@
 function SortSelect({ params, options, setSort }) {
-
     return (
         <>
-
             <label>
                 Sort by{" "}
                 <select value={params?.sort} onChange={(event) => setSort(event.target.value)}>
@@ -13,7 +11,6 @@ function SortSelect({ params, options, setSort }) {
                     ))}
                 </select>
             </label>
-
         </>
     )
 }

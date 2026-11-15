@@ -21,7 +21,13 @@ function AllProjectsPage() {
         <>
             <div>
                 <h1>Projects</h1>
-                <ProjectFilters applied={params} onApply={applyFilters} onReset={reset} />
+                <ProjectFilters
+                    key={`${params.search ?? ""}|${params.status ?? ""}`}
+                    applied={params}
+                    onApply={applyFilters}
+                    onReset={reset}
+                />
+
                 <SortSelect params={params} options={PROJECT_SORT_OPTIONS} setSort={setSort} />
 
                 <ListResults
