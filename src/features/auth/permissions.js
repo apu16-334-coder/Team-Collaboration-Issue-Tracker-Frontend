@@ -21,11 +21,11 @@ export const isMember = (user) => user?.role === 'member';
 // Relationship checks. Members only: a lead's access comes from the role
 // (the backend only returns records of teams they lead), so these are not
 // used for leads.
-const isIssueCreator = (user, issue) => isMember(user) && idOf(issue?.createdBy) === user?.id;
-const isIssueAssignee = (user, issue) => isMember(user) && idOf(issue?.assignedTo) === user?.id;
+export const isIssueCreator = (user, issue) => isMember(user) && idOf(issue?.createdBy) === user?.id;
+export const isIssueAssignee = (user, issue) => isMember(user) && idOf(issue?.assignedTo) === user?.id;
 
 // Relationship checks for comment author
-const isCommentAuthor = (user, comment) => idOf(comment?.author) === user?.id;
+export const isCommentAuthor = (user, comment) => idOf(comment?.author) === user?.id;
 
 // ---------------------------------------------------------------------------
 // Rules
