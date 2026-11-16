@@ -41,7 +41,7 @@ function LoginPage() {
                     <input id="password" name="password" type="password" value={formData.password} onChange={handleChange} />
                 </div>
 
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {error && <p style={{ color: 'red' }}>{error.message}</p>}
 
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? 'Logging In...' : 'Log In'}

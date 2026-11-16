@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import axiosClient from "../../api/axiosClient";
-import getErrorMessage from "../utils/getErrorMessage";
+import getErrorMessageAndStatus from "../utils/getErrorMessageAndStatus";
 
 function useApi(url, { skip = false, ...config } = {}) {
     const [response, setResponse] = useState(null);
@@ -25,7 +25,7 @@ function useApi(url, { skip = false, ...config } = {}) {
                 setResponse(res.data);
             } catch (err) {
                 if (axios.isCancel(err)) return; // we cancelled it ourselves, not a real error
-                setError(getErrorMessage(err));
+                setError(getErrorMessageAndStatus(err));
             } finally {
                 if (!controller.signal.aborted) setIsLoading(false);
             }
