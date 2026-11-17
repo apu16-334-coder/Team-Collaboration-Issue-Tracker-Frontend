@@ -8,7 +8,8 @@ import RoleProtectedRoute from "./routes/RoleProtectedRoute";
 import NotFound from "./pages/NotFound";
 import AppShell from "./layout/AppShell";
 import TeamsPage from "./features/teams/TeamsPage";
-import TeamDetailPage from './features/teams/TeamDetailPage'
+import TeamDetailPage from './features/teams/TeamDetailPage';
+import TeamMembersTab from "./features/teams/TeamMembersTab";
 
 function App() {
 
@@ -23,7 +24,9 @@ function App() {
                         <Route path="/dashboard" element={<DashboardPage />} />
                         <Route path="/teams" element={<TeamsPage />} />
 
-                        <Route path="/teams/:teamId" element={<TeamDetailPage />}></Route>
+                        <Route path="/teams/:teamId" element={<TeamDetailPage />}>
+                            <Route index element={<TeamMembersTab />} />
+                        </Route>
 
                         {/* Role Protected */}
                         <Route element={<RoleProtectedRoute allowedRoles={['admin']} />}>

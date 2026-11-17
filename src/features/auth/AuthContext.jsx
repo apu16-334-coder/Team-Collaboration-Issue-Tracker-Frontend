@@ -20,7 +20,6 @@ export function AuthProvider({ children }) {
                 setIsLoading(false);
             }
         }
-
         fetchUser();
     }, [])
 

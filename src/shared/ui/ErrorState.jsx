@@ -11,7 +11,7 @@ function ErrorState({ error, onRetry, action }) {
     return (
         <div role="alert">
             {TITLES[error.status] && <h3>{TITLES[error.status]}</h3>}
-            <p style={{ color: "red" }}>{error.message}</p>
+            {isRetryable(error.status) && <p style={{ color: "red" }}>{error.message}</p>}
             {onRetry && isRetryable(error.status) && <button onClick={onRetry}>Retry</button>}
             {action}
         </div>

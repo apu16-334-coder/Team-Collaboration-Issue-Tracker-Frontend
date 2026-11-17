@@ -1,7 +1,7 @@
 import { Link, NavLink, useParams, Outlet } from "react-router-dom"
 import useApi from "../../shared/hooks/useApi";
 import Spinner from "../../shared/ui/Spinner";
-import ErrorState from '../../shared/ui/ErrorState'
+import ErrorState from '../../shared/ui/ErrorState';
 
 const tabStyle = ({ isActive }) => ({
     marginRight: "16px",
