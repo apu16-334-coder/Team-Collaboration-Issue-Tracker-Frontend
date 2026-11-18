@@ -10,6 +10,7 @@ import AppShell from "./layout/AppShell";
 import TeamsPage from "./features/teams/TeamsPage";
 import TeamDetailPage from './features/teams/TeamDetailPage';
 import TeamMembersTab from "./features/teams/TeamMembersTab";
+import TeamProjectsTab from "./features/teams/TeamProjectsTab";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
 
                         <Route path="/teams/:teamId" element={<TeamDetailPage />}>
                             <Route index element={<TeamMembersTab />} />
+                            <Route path="projects" element={<TeamProjectsTab />} />
                         </Route>
 
                         {/* Role Protected */}

@@ -1,7 +1,13 @@
-import { useState } from "react"
-import { PROJECT_STATUSES } from './projectOptions.js'
+import { useContext, useState } from "react"
+import { PROJECT_STATUSES, VISIBLE_PROJECT_STATUSES } from './projectOptions.js'
+import { isAdmin } from "../auth/permissions.js";
+import { AuthContext } from "../auth/AuthContext.jsx";
 
 function ProjectFilters({ applied, onApply, onReset }) {
+    const { user } = useContext(AuthContext);
+
+    const statuses = isAdmin(user) ? PROJECT_STATUSES : VISIBLE_PROJECT_STATUSES;
+
     const [draft, setDraft] = useState({
         search: applied.search ?? "",
         status: applied.status ?? "",
@@ -29,7 +35,7 @@ function ProjectFilters({ applied, onApply, onReset }) {
 
             <select name="status" value={draft.status} onChange={handleChange}>
                 <option value="">All statuses</option>
-                {PROJECT_STATUSES.map((status) => (
+                {statuses.map((status) => (
                     <option key={status} value={status}>
                         {status.replace("_", " ")}
                     </option>

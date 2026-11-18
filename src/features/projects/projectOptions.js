@@ -9,6 +9,13 @@ export const PROJECT_STATUSES = [
     "archived",
 ]
 
+// What non-admins can see: GET /teams/:id/projects hides cancelled and archived for them.
+export const VISIBLE_PROJECT_STATUSES = [
+    "planning",
+    "active",
+    "on_hold",
+    "completed",
+]
 export const PROJECT_SORT_OPTIONS = [
     { value: "-createdAt", label: "Newest" },
     { value: "createdAt", label: "Oldest" },
