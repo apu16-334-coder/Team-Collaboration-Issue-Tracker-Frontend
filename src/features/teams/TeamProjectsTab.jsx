@@ -14,7 +14,7 @@ function TeamProjectsTab() {
 
     const { team } = useOutletContext();
 
-    const { response, isLoading, error, refetch } = useApi(`/teams/${team.id}/projects`, { params });
+    const { response, isLoading, error, refetch } = useApi(`/teams/${team.id}/projects`, { skip: !team, params });
 
     const projects = response?.data ?? [];
     const total = response?.total ?? 0;
