@@ -1,4 +1,6 @@
 function EmptyState({ title, message, action }) {
+    console.log(title)
+
     return (
         <div style={{ padding: "1rem", textAlign: "center" }}>
             <h3>{title}</h3>
