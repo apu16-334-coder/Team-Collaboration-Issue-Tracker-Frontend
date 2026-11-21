@@ -12,6 +12,7 @@ import TeamDetailPage from './features/teams/TeamDetailPage';
 import TeamMembersTab from "./features/teams/TeamMembersTab";
 import TeamProjectsTab from "./features/teams/TeamProjectsTab";
 import ProjectDetailPage from "./features/projects/ProjectDetailPage";
+import IssueDetailPage from "./features/issues/IssueDetailPage";
 
 function App() {
 
@@ -32,6 +33,8 @@ function App() {
                         </Route>
 
                         <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
+
+                        <Route path="/issues/:issueId" element={<IssueDetailPage />} />
 
                         {/* Role Protected */}
                         <Route element={<RoleProtectedRoute allowedRoles={['admin']} />}>
