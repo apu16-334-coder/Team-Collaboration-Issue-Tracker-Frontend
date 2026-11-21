@@ -11,7 +11,6 @@ function IssueFilter({ applied, onApply, onReset }) {
         status: applied.status ?? "",
         priority: applied.priority ?? '',
         type: applied.type ?? '',
-        assignedTo: applied.assignedTo === user.id,
     })
 
     const statuses = isMember(user) ? VISIBLE_ISSUE_STATUSES : ISSUE_STATUSES
@@ -22,9 +21,7 @@ function IssueFilter({ applied, onApply, onReset }) {
     }
 
     function handleChangeAssignedTo(event) {
-        const { name, checked } = event.target
-        setDraft(prev => ({ ...prev, [name]: checked }));
-        onApply({ assignedTo: checked ? user.id : '', });
+        onApply({ assignedTo: event.target.checked ? user.id : '', });
     }
 
     function handleSubmit(event) {
@@ -87,7 +84,7 @@ function IssueFilter({ applied, onApply, onReset }) {
                     <input
                         name="assignedTo"
                         type="checkbox"
-                        checked={draft.assignedTo}
+                        checked={applied.assignedTo === user.id}
                         onChange={handleChangeAssignedTo}
                     />{" "}
                     Assigned to me

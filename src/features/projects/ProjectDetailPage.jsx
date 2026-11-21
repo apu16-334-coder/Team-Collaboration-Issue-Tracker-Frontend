@@ -1,4 +1,4 @@
-import { Link, NavLink, useParams, Outlet, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import useApi from "../../shared/hooks/useApi";
 import Spinner from "../../shared/ui/Spinner";
 import ErrorState from '../../shared/ui/ErrorState';
@@ -10,14 +10,9 @@ import IssueFilter from "../issues/IssueFilter";
 import useListQuery from "../../shared/hooks/useListQuery";
 import { ISSUE_SORT_OPTIONS } from '../issues/issueOptions'
 import SortSelect from "../../shared/ui/SortSelect";
-
-const tabStyle = ({ isActive }) => ({
-    marginRight: "16px",
-    fontWeight: isActive ? "bold" : "normal",
-});
+import formatDate from "../../shared/utils/formatDate";
 
 const filterKeys = ["search", "status", "priority", "type", "assignedTo"]
-
 
 function ProjectDetailPage() {
     const { params, hasActiveQuery, applyFilters, setSort, setPage, reset } = useListQuery({ filterKeys });
@@ -63,7 +58,7 @@ function ProjectDetailPage() {
 
             <h3>Issue List</h3>
             <IssueFilter
-                key={`${params.search ?? ""}|${params.status ?? ""}|${params.priority ?? ""}|${params.type ?? ""}|${params.assignedTo ?? ""}`}
+                key={`${params.search ?? ""}|${params.status ?? ""}|${params.priority ?? ""}|${params.type ?? ""}`}
                 applied={params}
                 onApply={applyFilters}
                 onReset={reset}
@@ -73,8 +68,8 @@ function ProjectDetailPage() {
 
             <ListResults
                 isLoading={issueIsLoading}
-                error={error}
-                onRetry={issueError}
+                error={issueError}
+                onRetry={issueRefetch}
                 loadingLabel='Loading issues...'
                 isEmpty={issues.length === 0}
                 empty={<EmptyState
@@ -83,9 +78,9 @@ function ProjectDetailPage() {
                     action={hasActiveQuery ? <button onClick={reset}>Reset</button> : null}
                 />
                 }
-            >   
+            >
                 <IssueList issues={issues} />
-                <Pagination page={params.page} total={total} limit={params.limit} onPageChange={setPage}   />
+                <Pagination page={params.page} total={total} limit={params.limit} onPageChange={setPage} />
             </ListResults>
         </>
     )
