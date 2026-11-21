@@ -17,12 +17,14 @@ function IssueFilter({ applied, onApply, onReset }) {
     const statuses = isMember(user) ? VISIBLE_ISSUE_STATUSES : ISSUE_STATUSES
 
     function handleChange(event) {
-        const { name, value, type, checked } = event.target
-        setDraft(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }))
+        const { name, value } = event.target
+        setDraft(prev => ({ ...prev, [name]: value }))
+    }
 
+    function handleChangeAssignedTo(event) {
+        const { name, checked } = event.target
+        setDraft(prev => ({ ...prev, [name]: checked }));
+        onApply({ assignedTo: checked ? user.id : '', });
     }
 
     function handleSubmit(event) {
@@ -32,7 +34,6 @@ function IssueFilter({ applied, onApply, onReset }) {
             status: draft.status,
             priority: draft.priority,
             type: draft.type,
-            assignedTo: draft.assignedTo ? user.id : '',
         })
     }
 
@@ -76,22 +77,22 @@ function IssueFilter({ applied, onApply, onReset }) {
                 ))}
             </select>
 
+            <button type="submit">Search</button>
+            <button type="button" onClick={onReset}>
+                Reset
+            </button>
+
             {isMember(user) && (
                 <label style={{ marginLeft: "8px" }}>
                     <input
                         name="assignedTo"
                         type="checkbox"
                         checked={draft.assignedTo}
-                        onChange={handleChange}
+                        onChange={handleChangeAssignedTo}
                     />{" "}
                     Assigned to me
                 </label>
             )}
-
-            <button type="submit">Search</button>
-            <button type="button" onClick={onReset}>
-                Reset
-            </button>    
         </form>
     )
 }
