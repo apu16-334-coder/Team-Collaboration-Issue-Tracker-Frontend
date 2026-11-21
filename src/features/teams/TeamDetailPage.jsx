@@ -32,9 +32,9 @@ function TeamDetailPage() {
                     <span style={{ marginLeft: "8px", fontSize: "1rem", fontWeight: "normal" }}>(inactive)</span>
                 )}
             </h1>
-            {team.description && <p>{team.description}</p>}
+            {team.description && <p style={{ whiteSpace: "pre-wrap" }}>{team.description}</p>}
             <p>Lead: {team.teamLead?.name ?? "none"}</p>
-            
+
 
             <nav style={{ margin: "16px 0", paddingBottom: "8px", borderBottom: "1px solid #ddd" }}>
                 {/* "." = this route's own path; `end` keeps it from staying active on /projects */}
