@@ -8,6 +8,8 @@ import EmptyState from "../../shared/ui/EmptyState";
 import Pagination from "../../shared/ui/Pagination";
 import IssueFilter from "../issues/IssueFilter";
 import useListQuery from "../../shared/hooks/useListQuery";
+import { ISSUE_SORT_OPTIONS } from '../issues/issueOptions'
+import SortSelect from "../../shared/ui/SortSelect";
 
 const tabStyle = ({ isActive }) => ({
     marginRight: "16px",
@@ -59,12 +61,16 @@ function ProjectDetailPage() {
 
             {project.description && <p>{project.description}</p>}
 
+            <h3>Issue List</h3>
             <IssueFilter
                 key={`${params.search ?? ""}|${params.status ?? ""}|${params.priority ?? ""}|${params.type ?? ""}|${params.assignedTo ?? ""}`}
                 applied={params}
                 onApply={applyFilters}
                 onReset={reset}
             />
+
+            <SortSelect params={params} options={ISSUE_SORT_OPTIONS} setSort={setSort} />
+
             <ListResults
                 isLoading={issueIsLoading}
                 error={error}
@@ -77,8 +83,9 @@ function ProjectDetailPage() {
                     action={hasActiveQuery ? <button onClick={reset}>Reset</button> : null}
                 />
                 }
-            >
+            >   
                 <IssueList issues={issues} />
+                <Pagination page={params.page} total={total} limit={params.limit} onPageChange={setPage}   />
             </ListResults>
         </>
     )
