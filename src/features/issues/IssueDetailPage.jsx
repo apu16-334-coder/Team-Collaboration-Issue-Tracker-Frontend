@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom"
 import useApi from "../../shared/hooks/useApi";
 import Spinner from "../../shared/ui/Spinner";
 import ErrorState from "../../shared/ui/ErrorState";
+import CommentSection from "../comments/CommentSection";
 
 const metaStyle = {
     display: "flex",
@@ -56,6 +57,8 @@ function IssueDetailPage() {
             </div>
 
             {issue.description && <p style={{ whiteSpace: "pre-wrap" }}>{issue.description}</p>}
+
+            <CommentSection issue={issue} />
         </>
     )
 }
