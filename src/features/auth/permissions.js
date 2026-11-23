@@ -27,6 +27,9 @@ export const isIssueAssignee = (user, issue) => isMember(user) && idOf(issue?.as
 // Relationship checks for comment author
 export const isCommentAuthor = (user, comment) => idOf(comment?.author) === user?.id;
 
+// check issue status is cancelled or not
+const isIssueCancelled = (issue) => issue?.status === 'cancelled'
+
 // ---------------------------------------------------------------------------
 // Rules
 // ---------------------------------------------------------------------------
@@ -43,7 +46,7 @@ export const can = {
     // themselves. On the edit form use editableIssueFields instead.
     assignIssueToOthers: (user) => isLead(user),
     deleteIssue: (user) => isLead(user), // soft delete -> cancelled
-    createComment: (user) => isLead(user) || isMember(user),
+    
 
     // --- Relationship rules: the user AND the record ---
 
@@ -59,6 +62,7 @@ export const can = {
     changeIssueStatus: (user, issue) => isLead(user) || isIssueAssignee(user, issue),
 
     // Author only
+    createComment: (user, issue) => (isLead(user) || isMember(user)) && !isIssueCancelled(issue),
     editComment: (user, comment) => isCommentAuthor(user, comment),
     deleteComment: (user, comment) => isCommentAuthor(user, comment),
 };
