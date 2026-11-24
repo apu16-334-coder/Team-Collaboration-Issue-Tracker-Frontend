@@ -4,15 +4,30 @@ import formatDate from "../../shared/utils/formatDate";
 import { AuthContext } from "../auth/AuthContext";
 import { can } from "../auth/permissions";
 import CommentForm from "./CommentForm";
+import useMutation from "../../shared/hooks/useMutation";
+import ConfirmDialog from "../../shared/ui/ConfirmDialog";
 
 function CommentItem({ comment, onChange, onDelete }) {
     const { user } = useContext(AuthContext);
+    const { mutate, isLoading, error } = useMutation();
+
 
     const [isEditing, setIsEdititng] = useState(false);
+
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
     function handleEdit() {
         setIsEdititng(false);
         onChange();
+    }
+
+    async function handleDelete() {
+        const result = await mutate('delete', `/issues/${comment.issue.id}/comments/${comment.id}`);
+
+        if (result.ok) {
+            setIsDeleteOpen(false);
+            onDelete();
+        }
     }
 
     return (
@@ -44,11 +59,22 @@ function CommentItem({ comment, onChange, onDelete }) {
                         {/* Author-only: a relationship rule, so can.* needs the comment too. */}
                         <div style={{ display: "flex", gap: "8px", marginTop: "6px" }}>
                             {can.editComment(user, comment) && <button onClick={() => setIsEdititng(true)}>edit</button>}
+                            {can.deleteComment(user, comment) && <button onClick={() => setIsDeleteOpen(true)}>delete</button>}
                         </div>
                     </>
                 )
             }
 
+            <ConfirmDialog
+                isOpen={isDeleteOpen}
+                title="Delete comment?"
+                message="This comment will be permanently removed."
+                confirmLabel="Delete"
+                onConfirm={handleDelete}
+                onCancel={() => setIsDeleteOpen(false)}
+                isLoading={isLoading}
+                error={error}
+            />
 
         </li >
     );

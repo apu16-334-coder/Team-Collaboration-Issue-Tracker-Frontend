@@ -26,7 +26,6 @@ function CommentSection({ issue }) {
 
     function handleDelete() {
         if (params.page > 1 && comments.length === 1) setPage(params.page - 1);
-
         else refetch();
     }
 
