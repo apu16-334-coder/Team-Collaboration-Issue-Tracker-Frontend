@@ -3,7 +3,7 @@ import useMutation from "../../shared/hooks/useMutation";
 
 const MAX = 2000;
 
-function CommentForm({ url, initialText = '', submitLabel, onSubmit, clearOnSuccess = false }) {
+function CommentForm({ method, url, initialText = '', submitLabel, onSubmit, onCancel, clearOnSuccess = false }) {
     const [text, setText] = useState(initialText);
     const { mutate, isLoading: isSaving, error } = useMutation();
 
@@ -14,11 +14,12 @@ function CommentForm({ url, initialText = '', submitLabel, onSubmit, clearOnSucc
         event.preventDefault();
         if (!canSubmit) return;
 
-        const result = await mutate('post', url, { text: trimmed });
+        const result = await mutate(method, url, { text: trimmed });
 
         if (!result.ok) return;
-        onSubmit();
+
         if (clearOnSuccess) setText('');
+        onSubmit();
     }
 
     return (
@@ -36,6 +37,12 @@ function CommentForm({ url, initialText = '', submitLabel, onSubmit, clearOnSucc
                 <button type="submit" disabled={!canSubmit}>
                     {isSaving ? 'Saving...' : submitLabel}
                 </button>
+
+                {onCancel &&
+                    <button type="button" onClick={onCancel} disabled={isSaving}>
+                        Cancel
+                    </button>
+                }
 
                 <span style={{ color: "#666", fontSize: "0.85rem" }}>
                     {text.length}/{MAX}

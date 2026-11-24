@@ -20,8 +20,14 @@ function CommentSection({ issue }) {
 
     function handleCreate() {
         // console.log('creating...')
-        if(params.page > 1 && comments.length === 1) setPage(params.page -1);
-        else refetch(); 
+        if (params.page !== 1) setPage(1);
+        else refetch();
+    }
+
+    function handleDelete() {
+        if (params.page > 1 && comments.length === 1) setPage(params.page - 1);
+
+        else refetch();
     }
 
     return (
@@ -31,8 +37,12 @@ function CommentSection({ issue }) {
 
                 {can.createComment(user, issue) && (
                     <CommentForm
+                        method={'post'}
                         url={`/issues/${issue.id}/comments`}
-                        submitLabel="Add comment" onSubmit={handleCreate} clearOnSuccess />
+                        submitLabel="Add comment"
+                        onSubmit={handleCreate}
+                        clearOnSuccess
+                    />
                 )}
 
                 <ListResults
@@ -43,7 +53,12 @@ function CommentSection({ issue }) {
                     isEmpty={comments.length === 0}
                     empty={<EmptyState title="No comments yet" message="Nobody has commented on this issue." />}
                 >
-                    <CommentList comments={comments} />
+                    <CommentList
+                        comments={comments}
+                        onChange={refetch}
+                        onDelete={handleDelete}
+                    />
+
                     <Pagination page={params.page} total={total} limit={params.limit} onPageChange={setPage} />
                 </ListResults>
             </section>
