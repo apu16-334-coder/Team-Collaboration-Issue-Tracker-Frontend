@@ -1,25 +1,26 @@
 import { useState } from "react";
-import useMutation from "../../shared/hooks/useMutation";
 
 const MAX = 2000;
 
-function CommentForm({ method, url, initialText = '', submitLabel, onSubmit, onCancel, clearOnSuccess = false }) {
+function CommentForm({ initialText = '', submitLabel, onSubmit, onCancel, clearOnSuccess = false }) {
     const [text, setText] = useState(initialText);
-    const { mutate, isLoading: isSaving, error } = useMutation();
+    const [isSaving, setIsSaving] = useState(false);
+    const [error, setError] = useState(null);
 
     const trimmed = text.trim();
-    const canSubmit = trimmed.length > 0 && trimmed !== initialText && !isSaving;
+    const canSubmit = trimmed.length > 0 && trimmed !== initialText.trim() && !isSaving;
 
     async function handleSubmit(event) {
         event.preventDefault();
         if (!canSubmit) return;
 
-        const result = await mutate(method, url, { text: trimmed });
-
-        if (!result.ok) return;
-
-        if (clearOnSuccess) setText('');
-        onSubmit();
+        setIsSaving(true);
+        setError(null);
+        const result = await onSubmit(trimmed);
+        setIsSaving(false);
+        
+        if (result.ok) { if (clearOnSuccess) setText(''); }
+        else setError(result.error)
     }
 
     return (

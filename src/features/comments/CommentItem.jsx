@@ -7,27 +7,30 @@ import CommentForm from "./CommentForm";
 import useMutation from "../../shared/hooks/useMutation";
 import ConfirmDialog from "../../shared/ui/ConfirmDialog";
 
-function CommentItem({ comment, onChange, onDelete }) {
+function CommentItem({ comment, issueId, onChange, onDelete }) {
     const { user } = useContext(AuthContext);
-    const { mutate, isLoading, error } = useMutation();
-
+    const { mutate, isLoading } = useMutation();
 
     const [isEditing, setIsEdititng] = useState(false);
 
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [deleteError, setDeleteError] = useState(null);
 
-    function handleEdit() {
-        setIsEdititng(false);
-        onChange();
+    async function handleEdit(text) {
+        const result = await mutate('patch', `/issues/${issueId}/comments/${comment.id}`, { text });
+
+        if (result.ok) {
+            setIsEdititng(false);
+            onChange();
+        }
+        return result;
     }
 
     async function handleDelete() {
-        const result = await mutate('delete', `/issues/${comment.issue.id}/comments/${comment.id}`);
-
-        if (result.ok) {
-            setIsDeleteOpen(false);
-            onDelete();
-        }
+        setDeleteError(null);
+        const result = await mutate('delete', `/issues/${issueId}/comments/${comment.id}`);
+        if (result.ok) { setIsDeleteOpen(false); onDelete(); }
+        else setDeleteError(result.error);
     }
 
     return (
@@ -43,15 +46,12 @@ function CommentItem({ comment, onChange, onDelete }) {
             {isEditing ?
                 (
                     <CommentForm
-                        method={'patch'}
-                        url={`/issues/${comment.issue.id}/comments/${comment.id}`}
                         initialText={comment.text}
                         submitLabel="Save"
                         onSubmit={handleEdit}
                         onCancel={() => setIsEdititng(false)}
                     />
                 ) : (
-
                     <>
                         {/* pre-wrap keeps the author's line breaks */}
                         < p style={{ margin: "6px 0 0", whiteSpace: "pre-wrap" }}>{comment.text}</p>
@@ -73,7 +73,7 @@ function CommentItem({ comment, onChange, onDelete }) {
                 onConfirm={handleDelete}
                 onCancel={() => setIsDeleteOpen(false)}
                 isLoading={isLoading}
-                error={error}
+                error={deleteError}
             />
 
         </li >

@@ -8,20 +8,28 @@ import { can } from '../auth/permissions'
 import { useContext } from "react";
 import { AuthContext } from "../auth/AuthContext"
 import CommentForm from "./CommentForm";
+import useMutation from "../../shared/hooks/useMutation";
 
 function CommentSection({ issue }) {
     const { params, setPage } = useListQuery();
     const { user } = useContext(AuthContext);
+    const { mutate } = useMutation();
 
     const { response, isLoading, error, refetch } = useApi(`/issues/${issue.id}/comments`, { skip: !issue, params });
 
     const comments = response?.data ?? [];
     const total = response?.total ?? 0;
 
-    function handleCreate() {
-        // console.log('creating...')
-        if (params.page !== 1) setPage(1);
-        else refetch();
+    async function handleCreate(text) {
+        const result = await mutate("post", `/issues/${issue.id}/comments`, { text });
+
+        if (result.ok) {
+            // console.log('creating...')
+            if (params.page !== 1) setPage(1);
+            else refetch();
+        }
+
+        return result;
     }
 
     function handleDelete() {
@@ -54,6 +62,7 @@ function CommentSection({ issue }) {
                 >
                     <CommentList
                         comments={comments}
+                        issueId={issue.id}
                         onChange={refetch}
                         onDelete={handleDelete}
                     />
