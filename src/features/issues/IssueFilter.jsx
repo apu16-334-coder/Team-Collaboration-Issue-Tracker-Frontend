@@ -2,96 +2,134 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../auth/AuthContext";
 import { VISIBLE_ISSUE_STATUSES, ISSUE_STATUSES, ISSUE_PRIORITIES, ISSUE_TYPES } from './issueOptions';
 import { isMember } from "../auth/permissions";
+import CheckBoxGroup from "../../shared/ui/CheckBoxGroup";
 
-function IssueFilter({ applied, onApply, onReset }) {
+const toArray = (value) =>
+    Array.isArray(value) ? value : value ? String(value).split(',') : [];
+
+function IssueFilter({ applied, onApply, onReset, teamMembers }) {
     const { user } = useContext(AuthContext);
 
     const [draft, setDraft] = useState({
         search: applied.search ?? "",
-        status: applied.status ?? "",
-        priority: applied.priority ?? '',
-        type: applied.type ?? '',
-    })
+        status: toArray(applied.status),
+        priority: toArray(applied.priority),
+        type: toArray(applied.type),
+        assignedTo: applied.assignedTo ?? '',
+    });
 
-    const statuses = isMember(user) ? VISIBLE_ISSUE_STATUSES : ISSUE_STATUSES
+    const statusOptions = isMember(user) ? VISIBLE_ISSUE_STATUSES : ISSUE_STATUSES;
 
     function handleChange(event) {
-        const { name, value } = event.target
-        setDraft(prev => ({ ...prev, [name]: value }))
+        const { name, value } = event.target;
+        setDraft(prev => ({ ...prev, [name]: value }));
+    }
+
+    function handleChangeCheckBoxGroup(name, next) {
+        setDraft(prev => ({ ...prev, [name]: next }));
     }
 
     function handleChangeAssignedTo(event) {
-        onApply({ assignedTo: event.target.checked ? user.id : '', });
+        onApply({ assignedTo: event.target.checked ? user.id : '' });
     }
 
     function handleSubmit(event) {
         event.preventDefault();
         onApply({
             search: draft.search.trim(),
-            status: draft.status,
-            priority: draft.priority,
-            type: draft.type,
-        })
+            status: draft.status.join(','),
+            priority: draft.priority.join(','),
+            type: draft.type.join(','),
+            assignedTo: draft.assignedTo,
+        });
     }
 
+    // Structure helpers (Tailwind can replace these later)
+    const filterRow = { display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" };
+    const actionRow = { display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center", marginBottom: "12px" };
+
     return (
-        <form
-            onSubmit={handleSubmit}
-            style={{ display: "flex", gap: "8px", marginBottom: "12px", flexWrap: "wrap", alignItems: "center" }}
-        >
-            <input
-                name="search"
-                type="search"
-                placeholder="Search title or description"
-                value={draft.search}
-                onChange={handleChange}
-            />
+        <form onSubmit={handleSubmit}>
 
-            <select name="status" value={draft.status} onChange={handleChange}>
-                <option value="">All statuses</option>
-                {statuses.map((status) => (
-                    <option key={status} value={status}>
-                        {status.replace("_", " ")}
-                    </option>
-                ))}
-            </select>
+            {/* ── Filter Groups (Top) ── */}
+            <div style={{ marginBottom: "12px" }}>
+                {/* Status */}
+                <div style={filterRow}>
+                    <div style={{ minWidth: "60px" }}>Status:</div>
+                    <CheckBoxGroup
+                        name="status"
+                        options={statusOptions}
+                        selected={draft.status}
+                        onChange={handleChangeCheckBoxGroup}
+                    />
+                </div>
 
-            <select name="priority" value={draft.priority} onChange={handleChange}>
-                <option value="">All priorities</option>
-                {ISSUE_PRIORITIES.map((priority) => (
-                    <option key={priority} value={priority}>
-                        {priority}
-                    </option>
-                ))}
-            </select>
+                {/* Priority */}
+                <div style={filterRow}>
+                    <div style={{ minWidth: "60px" }}>Priority:</div>
+                    <CheckBoxGroup
+                        name="priority"
+                        options={ISSUE_PRIORITIES}
+                        selected={draft.priority}
+                        onChange={handleChangeCheckBoxGroup}
+                    />
+                </div>
 
-            <select name="type" value={draft.type} onChange={handleChange}>
-                <option value="">All types</option>
-                {ISSUE_TYPES.map((type) => (
-                    <option key={type} value={type}>
-                        {type}
-                    </option>
-                ))}
-            </select>
+                {/* Type */}
+                <div style={filterRow}>
+                    <div style={{ minWidth: "60px" }}>Type:</div>
+                    <CheckBoxGroup
+                        name="type"
+                        options={ISSUE_TYPES}
+                        selected={draft.type}
+                        onChange={handleChangeCheckBoxGroup}
+                    />
+                </div>
+            </div>
 
-            <button type="submit">Search</button>
-            <button type="button" onClick={onReset}>
-                Reset
-            </button>
+            {/* ── Search & Actions (Bottom) ── */}
+            <div style={actionRow}>
+                <input
+                    name="search"
+                    type="search"
+                    placeholder="Search title or description"
+                    value={draft.search}
+                    onChange={handleChange}
+                    size={30}
+                />
 
+                {!isMember(user) && teamMembers.length > 0 &&
+                    <select name="assignedTo" value={draft.assignedTo} onChange={handleChange}>
+                        <option value="">All Members</option>
+                        {teamMembers.map((member) => (
+                            <option key={member.id} value={member.id}>
+                                {member.name}
+                            </option>
+                        ))}
+                    </select>
+                }
+
+                <button type="submit">Search</button>
+                <button type="button" onClick={onReset}>Reset</button>
+            </div>
+
+            {/* ── Quick filter ── */}
             {isMember(user) && (
-                <label style={{ marginLeft: "8px" }}>
-                    <input
-                        name="assignedTo"
-                        type="checkbox"
-                        checked={applied.assignedTo === user.id}
-                        onChange={handleChangeAssignedTo}
-                    />{" "}
-                    Assigned to me
-                </label>
+                <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
+                    <label>
+                        <input
+                            name="assignedTo"
+                            type="checkbox"
+                            checked={applied.assignedTo === user.id}
+                            onChange={handleChangeAssignedTo}
+                        />{" "}
+                        Assigned to me
+                    </label>
+                </div>
             )}
+
         </form>
-    )
+    );
 }
 
 export default IssueFilter;

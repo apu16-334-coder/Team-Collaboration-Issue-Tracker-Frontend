@@ -15,6 +15,12 @@ function ProjectIssuesSection({ project }) {
 
     const { response, isLoading, error, refetch } = useApi(`/projects/${project.id}/issues`, { skip: !project, params });
 
+    let teamMembers = []
+    if (project.team) {
+        const { response } = useApi(`/teams/${project.team.id}`)
+        teamMembers = response?.data?.members ?? [];
+    }
+
     const issues = response?.data ?? [];
     const total = response?.total ?? 0;
 
@@ -22,10 +28,11 @@ function ProjectIssuesSection({ project }) {
         <>
             <h3>Issue List</h3>
             <IssueFilter
-                key={`${params.search ?? ""}|${params.status ?? ""}|${params.priority ?? ""}|${params.type ?? ""}`}
+                key={`${params.search ?? ""}|${params.status ?? ""}|${params.priority ?? ""}|${params.type ?? ""}|${params.assignedTo ?? ""}`}
                 applied={params}
                 onApply={applyFilters}
                 onReset={reset}
+                teamMembers={teamMembers}
             />
 
             <SortSelect params={params} options={ISSUE_SORT_OPTIONS} setSort={setSort} />

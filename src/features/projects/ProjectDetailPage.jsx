@@ -5,8 +5,6 @@ import ErrorState from '../../shared/ui/ErrorState';
 import formatDate from "../../shared/utils/formatDate";
 import ProjectIssuesSection from "./ProjectIssuesSection";
 
-
-
 function ProjectDetailPage() {
     const { projectId } = useParams();
     const navigate = useNavigate();
