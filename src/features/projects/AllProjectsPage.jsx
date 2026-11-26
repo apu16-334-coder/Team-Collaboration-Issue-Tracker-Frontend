@@ -14,6 +14,7 @@ function AllProjectsPage() {
     const { params, hasActiveQuery, applyFilters, setSort, setPage, reset } = useListQuery({ filterKeys })
 
     const { response, isLoading, error, refetch } = useApi('/projects', { params });
+    
     const projects = response?.data ?? [];
     const total = response?.total ?? 0;
 
