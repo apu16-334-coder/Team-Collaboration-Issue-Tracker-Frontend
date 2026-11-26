@@ -6,6 +6,7 @@ import CommentSection from "../comments/CommentSection";
 import { can, allowedIssueStatuses } from "../auth/permissions";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/AuthContext";
+import useMutation from "../../shared/hooks/useMutation";
 
 const metaStyle = {
     display: "flex",
@@ -18,7 +19,9 @@ const metaStyle = {
 function IssueDetailPage() {
     const { issueId } = useParams();
 
-    const { user } = useContext(AuthContext)
+    const { user } = useContext(AuthContext);
+
+    const { mutate, errorIssue } = useMutation();
 
     const { response, isLoading, error, refetch } = useApi(`/issues/${issueId}`);
 
@@ -45,6 +48,17 @@ function IssueDetailPage() {
     const projectId = issue.project?.id ?? issue.project ?? null;
     const projectTitle = issue.project?.title ?? "Back to project";
 
+    async function handleReopen() {
+        const response = await mutate('patch', `/issues/${issueId}/re-open`);
+        if (response.ok) refetch();
+    }
+
+    async function handleStatusUpdate() {
+        const response = await mutate('patch', `/issues/${issueId}`, { status: statusDraft });
+        if (response.ok) refetch();
+    }
+
+
     return (
         <>
             {projectId && <Link to={`/projects/${projectId}`}>{projectTitle}</Link>}
@@ -53,10 +67,10 @@ function IssueDetailPage() {
                 <h1 style={{ margin: 0 }}>{issue.title}</h1>
 
                 {/* Edit: relationship rule — lead, or creator+assignee member. */}
-                {can.editIssue(user, issue)  && issue.status !== "cancelled" && (
+                {can.editIssue(user, issue) && issue.status !== "cancelled" && (
                     <button onClick={() => setIsEditOpen(true)}>Edit</button>
                 )}
-            </div> 
+            </div>
 
             {issue.status === "cancelled" && (
                 <p style={{ color: "#a00" }}>This issue was cancelled.</p>
@@ -77,26 +91,31 @@ function IssueDetailPage() {
             {/* reopen cancelled issue. */}
             {can.reopenIssue(user) && issue.status === "cancelled" && (
                 <div>
-                    <button>Re-open</button>
+                    <button onClick={handleReopen}>Re-open</button>
+
+                    {errorIssue && <p style={{ color: "red" }}>{errorIssue.message}</p>}
                 </div>
             )}
 
             {/* Status change: separate gate from Edit — an assignee-only member
                 gets this control even with no Edit button above. */}
             {can.changeIssueStatus(user, issue) && issue.status !== "cancelled" && (
-                <div style={{ display: "flex", gap: "8px", alignItems: "center", margin: "12px 0" }}>
-                    <select
-                        value={statusDraft || issue.status}
-                        onChange={(event) => setStatusDraft(event.target.value)}
-                    >
-                        {allowedIssueStatuses(user).map((status) => (
-                            <option key={status} value={status}>{status.replace("_", " ")}</option>
-                        ))}
-                    </select>
-                    <button disabled={!statusDraft || statusDraft === issue.status}>
-                        Update status
-                    </button>
-                </div>
+                <>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center", margin: "12px 0" }}>
+                        <select
+                            value={statusDraft || issue.status}
+                            onChange={(event) => setStatusDraft(event.target.value)}
+                        >
+                            {allowedIssueStatuses(user).map((status) => (
+                                <option key={status} value={status}>{status.replace("_", " ")}</option>
+                            ))}
+                        </select>
+                        <button onClick={handleStatusUpdate} disabled={!statusDraft || statusDraft === issue.status}>
+                            Update Status
+                        </button>
+                    </div>
+                    {errorIssue && <p style={{ color: "red" }}>{errorIssue.message}</p>}
+                </>
             )}
 
             {/* Cancel: lead only, soft delete. */}
