@@ -56,7 +56,7 @@ function IssueDetailPage() {
                 {can.editIssue(user, issue)  && issue.status !== "cancelled" && (
                     <button onClick={() => setIsEditOpen(true)}>Edit</button>
                 )}
-            </div>
+            </div> 
 
             {issue.status === "cancelled" && (
                 <p style={{ color: "#a00" }}>This issue was cancelled.</p>
@@ -73,6 +73,13 @@ function IssueDetailPage() {
                 <span>Assigned to: {issue.assignedTo?.name ?? "Unassigned"}</span>
                 <span>Created by: {issue.createdBy?.name ?? "Unknown"}</span>
             </div>
+
+            {/* reopen cancelled issue. */}
+            {can.reopenIssue(user) && issue.status === "cancelled" && (
+                <div>
+                    <button>Re-open</button>
+                </div>
+            )}
 
             {/* Status change: separate gate from Edit — an assignee-only member
                 gets this control even with no Edit button above. */}
@@ -95,7 +102,7 @@ function IssueDetailPage() {
             {/* Cancel: lead only, soft delete. */}
             {can.deleteIssue(user) && issue.status !== "cancelled" && (
                 <button onClick={() => setIsCancelOpen(true)} style={{ marginBottom: "12px" }}>
-                    Cancel issue
+                    Cancel
                 </button>
             )}
 

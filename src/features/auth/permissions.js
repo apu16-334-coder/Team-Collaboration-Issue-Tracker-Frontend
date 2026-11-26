@@ -46,8 +46,8 @@ export const can = {
     // themselves. On the edit form use editableIssueFields instead.
     assignIssueToOthers: (user) => isLead(user),
     deleteIssue: (user) => isLead(user), // soft delete -> cancelled
+    reopenIssue: (user) => isLead(user), // reopen issue -> reopen
     
-
     // --- Relationship rules: the user AND the record ---
 
     // A lead can edit issue 
