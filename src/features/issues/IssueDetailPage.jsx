@@ -7,6 +7,7 @@ import { can, allowedIssueStatuses } from "../auth/permissions";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/AuthContext";
 import useMutation from "../../shared/hooks/useMutation";
+import ConfirmDialog from "../../shared/ui/ConfirmDialog";
 
 const metaStyle = {
     display: "flex",
@@ -21,7 +22,7 @@ function IssueDetailPage() {
 
     const { user } = useContext(AuthContext);
 
-    const { mutate, errorIssue } = useMutation();
+    const { mutate, isLoading: isLoadingIssue, errorIssue } = useMutation();
 
     const { response, isLoading, error, refetch } = useApi(`/issues/${issueId}`);
 
@@ -29,6 +30,7 @@ function IssueDetailPage() {
     // bodies and submit handlers; these just control which one is open.
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isCancelOpen, setIsCancelOpen] = useState(false);
+    const [cancelError, setCancelError] = useState(false);
     const [statusDraft, setStatusDraft] = useState("");
 
     if (isLoading) return <Spinner label="Loading issue..." />;
@@ -57,6 +59,16 @@ function IssueDetailPage() {
         const response = await mutate('patch', `/issues/${issueId}`, { status: statusDraft });
         if (response.ok) refetch();
     }
+
+    async function handleCancel() {
+        setCancelError(false);
+        const response = await mutate('delete', `/issues/${issueId}`, { status: 'cancelled' });
+
+        if(!response.ok) setCancelError(true)
+        else { setIsCancelOpen(false); refetch(); }
+    }
+
+
 
 
     return (
@@ -96,6 +108,18 @@ function IssueDetailPage() {
                     {errorIssue && <p style={{ color: "red" }}>{errorIssue.message}</p>}
                 </div>
             )}
+
+            {/* Issue cancel confirm Dialog */}
+            <ConfirmDialog
+                isOpen={isCancelOpen} 
+                title="Cancel issue?" 
+                message='This issue will be cancelled'
+                confirmLabel='Confirm'
+                onConfirm={handleCancel}
+                onCancel={() => setIsCancelOpen(false)}
+                isLoading={isLoadingIssue}
+                error={cancelError}
+            />
 
             {/* Status change: separate gate from Edit — an assignee-only member
                 gets this control even with no Edit button above. */}
